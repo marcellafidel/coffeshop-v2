@@ -57,6 +57,7 @@
             <a href="{{ route('home') }}">Home</a>
             <a href="{{ route('menu') }}">Menu</a>
             <a href="{{ route('customer.profile') }}">👤 Profil</a>
+            <a href="{{ route('riwayat.index') }}">📋 Pesanan Saya</a>
             @auth
                 <a href="{{ route('cart.index') }}">
                     🛒 Keranjang

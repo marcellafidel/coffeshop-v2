@@ -9,8 +9,12 @@ class CustomerMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!auth()->check() || auth()->user()->role !== 'customer') {
-            return redirect('/');
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
         }
 
         return $next($request);

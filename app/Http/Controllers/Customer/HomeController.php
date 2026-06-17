@@ -4,24 +4,50 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
+use App\Models\Kategori;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $menus = Menu::latest()->take(6)->get();
+        $menus = Menu::withCount('reviews')->withAvg('reviews', 'rating')->latest()->take(6)->get();
         return view('customer.home', compact('menus'));
     }
 
-    public function menu()
+    public function menu(Request $request)
     {
-        $menus = Menu::all();
-        return view('customer.menu', compact('menus'));
-    }
+        $query = Menu::withCount('reviews')->withAvg('reviews', 'rating')->with('kategori');
 
-    public function menu()
-    {
-        $menus = Menu::withCount('reviews')->withAvg('reviews', 'rating')->get();
-        return view('customer.menu', compact('menus'));
+        // Filter pencarian
+        if ($request->search) {
+            $query->where('namaProduk', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter kategori
+        if ($request->kategori_id) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        // Filter harga
+        if ($request->harga_min) {
+            $query->where('harga', '>=', $request->harga_min);
+        }
+        if ($request->harga_max) {
+            $query->where('harga', '<=', $request->harga_max);
+        }
+
+        // Sort
+        match($request->sort) {
+            'harga_asc'  => $query->orderBy('harga', 'asc'),
+            'harga_desc' => $query->orderBy('harga', 'desc'),
+            'rating'     => $query->orderByDesc('reviews_avg_rating'),
+            default      => $query->latest(),
+        };
+
+        $menus     = $query->paginate(9)->withQueryString();
+        $kategoris = Kategori::all();
+
+        return view('customer.menu', compact('menus', 'kategoris'));
     }
 }

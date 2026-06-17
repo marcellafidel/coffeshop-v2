@@ -64,8 +64,13 @@
         </div>
         <button type="submit" class="btn-filter">Tampilkan</button>
     </form>
+    <div style="margin-top:12px;">
+        <a href="{{ route('admin.laporan.export-pdf', ['bulan' => $bulan, 'tahun' => $tahun]) }}"
+           style="padding:10px 22px;background:#e74c3c;color:#fff;text-decoration:none;border-radius:10px;font-size:14px;font-weight:600;">
+           📄 Export PDF
+        </a>
+    </div>
 </div>
-
 {{-- STAT CARDS --}}
 <div class="stat-grid">
     <div class="stat-card" style="animation-delay:0.1s">

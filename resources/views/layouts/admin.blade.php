@@ -48,6 +48,7 @@
             <li><a href="{{ route('admin.promos.index') }}" ...>🎁 Promo & Diskon</a></li>
             <li><a href="{{ route('admin.reviews.index') }}" class="{{ request()->routeIs('admin.reviews*') ? 'active' : '' }}">⭐ Review Produk</a></li>
             <li><a href="{{ route('admin.notifications.index') }}" class="{{ request()->routeIs('admin.notifications*') ? 'active' : '' }}">🔔 Notifikasi</a></li>
+            <li><a href="{{ route('admin.kategoris.index') }}" class="{{ request()->routeIs('admin.kategoris*') ? 'active' : '' }}">🗂️ Kategori</a></li>
         </ul>
         <div class="sidebar-logout">
             <form action="{{ route('logout') }}" method="POST">

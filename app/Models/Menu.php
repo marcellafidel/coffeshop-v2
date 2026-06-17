@@ -11,8 +11,9 @@ class Menu extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'idProduk', 'namaProduk', 'harga', 'deskripsi', 'stok', 'ukuran', 'tglDitambahkan'
-    ];
+    'idProduk', 'namaProduk', 'harga', 'deskripsi', 
+    'stok', 'ukuran', 'tglDitambahkan', 'kategori_id'
+];
 
     public function detailPesanans()
     {
@@ -32,5 +33,10 @@ class Menu extends Model
     public function rataRating()
     {
         return $this->reviews()->avg('rating') ?? 0;
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
     }
 }

@@ -30,6 +30,10 @@ Route::middleware(['auth', 'customer'])->group(function () {
     Route::delete('/promo/remove', [Customer\PromoController::class, 'remove'])->name('promo.remove');
     Route::post('/review', [Customer\ReviewController::class, 'store'])->name('review.store');
     Route::delete('/review/{review}', [Customer\ReviewController::class, 'destroy'])->name('review.destroy');
+    Route::get('/riwayat', [Customer\RiwayatController::class, 'index'])->name('riwayat.index');
+    Route::get('/riwayat/{id}', [Customer\RiwayatController::class, 'show'])->name('riwayat.show');
+    Route::get('/invoice/{id}', [Customer\RiwayatController::class, 'invoice'])->name('invoice');
+    Route::get('/track/{id}', [Customer\RiwayatController::class, 'track'])->name('pesanan.track');
 });
 
 // ===== ADMIN =====
@@ -47,6 +51,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/notifications/{id}/read', [Admin\NotificationController::class, 'markRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [Admin\NotificationController::class, 'markAllRead'])->name('notifications.readAll');
     Route::get('/notifications', [Admin\NotificationController::class, 'index'])->name('notifications.index');
+    Route::resource('kategoris', Admin\KategoriController::class)->except(['show']);
+    Route::get('/laporan/export-pdf', [Admin\LaporanController::class, 'exportPdf'])->name('laporan.export-pdf');
+    Route::get('/orders/{id}/export-pdf', [Admin\OrderController::class, 'exportPdf'])->name('orders.export-pdf');
 });
 
 require __DIR__.'/auth.php';

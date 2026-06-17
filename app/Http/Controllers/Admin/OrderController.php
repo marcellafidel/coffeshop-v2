@@ -25,4 +25,13 @@ class OrderController extends Controller
         $order->update(['status' => request('status')]);
         return redirect()->route('admin.orders.index')->with('success', 'Status pesanan diupdate!');
     }
+
+    public function exportPdf($id)
+    {
+        $order = Pesanan::with(['customer', 'detailPesanans'])->findOrFail($id);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.orders.pdf', compact('order'));
+
+        return $pdf->download("pesanan-{$order->idPesanan}.pdf");
+    }
 }

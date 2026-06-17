@@ -35,6 +35,17 @@
             <input type="number" name="stok" value="{{ $product->stok }}" required>
         </div>
         <div class="form-group">
+            <label>Kategori</label>
+            <select name="kategori_id" style="width:100%;padding:12px 16px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:#fafafa;">
+                <option value="">-- Pilih Kategori --</option>
+                @foreach(\App\Models\Kategori::all() as $kat)
+                <option value="{{ $kat->id }}" {{ isset($product) && $product->kategori_id == $kat->id ? 'selected' : '' }}>
+                    {{ $kat->icon }} {{ $kat->nama }}
+                </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
             <label>Deskripsi</label>
             <textarea name="deskripsi" rows="3">{{ $product->deskripsi }}</textarea>
         </div>
