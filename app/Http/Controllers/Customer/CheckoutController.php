@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
 use App\Models\DetailPesanan;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -28,12 +29,13 @@ class CheckoutController extends Controller
 
         $idPesanan = 'PSN' . strtoupper(Str::random(3));
 
-        $pesanan = Pesanan::create([
+        Pesanan::create([
             'idPesanan'        => $idPesanan,
             'idCust'           => auth()->id(),
             'metodePembayaran' => $request->metodePembayaran,
             'catatan'          => $request->catatan,
             'tglPesanan'       => now(),
+            'status'           => 'pending',
         ]);
 
         foreach ($cart as $item) {
@@ -48,7 +50,6 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // Buat notifikasi
         Notification::create([
             'judul' => 'Pesanan Baru!',
             'pesan' => 'Pesanan #' . $idPesanan . ' dari ' . auth()->user()->name,
@@ -57,6 +58,38 @@ class CheckoutController extends Controller
         ]);
 
         session()->forget('cart');
-        return redirect()->route('home')->with('success', 'Pesanan berhasil dibuat!');
+
+        return redirect()->route('checkout.bukti', $idPesanan)
+                         ->with('success', 'Pesanan dibuat! Silakan upload bukti pembayaran.');
+    }
+
+    public function buktiBayar($idPesanan)
+    {
+        $pesanan = Pesanan::where('idPesanan', $idPesanan)
+                          ->where('idCust', auth()->id())
+                          ->firstOrFail();
+
+        return view('customer.bukti-bayar', compact('pesanan'));
+    }
+
+    public function uploadBukti(Request $request, $idPesanan)
+    {
+        $request->validate([
+            'bukti_bayar' => 'required|image|max:2048',
+        ]);
+
+        $pesanan = Pesanan::where('idPesanan', $idPesanan)
+                          ->where('idCust', auth()->id())
+                          ->firstOrFail();
+
+        $path = $request->file('bukti_bayar')->store('bukti-bayar', 'public');
+
+        $pesanan->update([
+            'bukti_bayar' => $path,
+            'status'      => 'confirmed',
+        ]);
+
+        return redirect()->route('riwayat.index')
+                         ->with('success', 'Bukti pembayaran berhasil dikirim!');
     }
 }

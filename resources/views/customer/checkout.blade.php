@@ -21,8 +21,8 @@
 
 <div class="checkout-wrap">
     <h1>Checkout</h1>
-    <form action="{{ route('checkout.process') }}" method="POST">
-        @csrf
+    <form method="POST" action="{{ route('checkout.process') }}">
+    @csrf
         <div class="form-card">
             <h3>Metode Pembayaran</h3>
             <div class="form-group">

@@ -34,6 +34,8 @@ Route::middleware(['auth', 'customer'])->group(function () {
     Route::get('/riwayat/{id}', [Customer\RiwayatController::class, 'show'])->name('riwayat.show');
     Route::get('/invoice/{id}', [Customer\RiwayatController::class, 'invoice'])->name('invoice');
     Route::get('/track/{id}', [Customer\RiwayatController::class, 'track'])->name('pesanan.track');
+    Route::get('/checkout/bukti/{idPesanan}', [Customer\CheckoutController::class, 'buktiBayar'])->name('checkout.bukti');
+    Route::post('/checkout/bukti/{idPesanan}', [Customer\CheckoutController::class, 'uploadBukti'])->name('checkout.upload-bukti');
 });
 
 // ===== ADMIN =====
